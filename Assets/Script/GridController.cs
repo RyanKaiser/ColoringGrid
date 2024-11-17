@@ -1,52 +1,46 @@
 using UnityEngine;
 
-public class GridController// : MonoBehaviour
+public class GridController
 {
-    private GridModel gridModel;
-    private GridView gridView;
+    private GridModel _model;
+    private GridView _view;
 
-    public Color selectedColor;  // 현재 선택된 색상
 
-    
     public GridController(GridModel model, GridView view)
     {
-        this.gridModel = model;
-        this.gridView = view;
-        
-        gridView.InitializeGrid(gridModel.width, gridModel.height);
+        _model = model;
+        _view = view;
+
+        _view.InitializeGrid(_model.Width, _model.Height, HandleTileSelection);
+        _view.OnColorSelected += color =>
+        {
+            _model.CurrentColor = color;
+        };
+
+        // _view.OnTileSelected += (x, y) =>
+        // {
+        //
+        //     _model.SetTileColor(x, y);
+        // };
+
+        void HandleTileSelection(int x, int y)
+        {
+            _model.SetTileColor(x, y);
+        }
     }
 
-    // void Update()
+
+
+
+    // public void OnUndoButtonClicked()
     // {
-    //     HandleMouseInput();
+    //     gridModel.Undo();
+    //     gridView.UpdateGridColors();
     // }
     //
-    // private void HandleMouseInput()
+    // public void OnRedoButtonClicked()
     // {
-    //     if (Input.GetMouseButtonDown(0))
-    //     {
-    //         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //         int x = Mathf.FloorToInt(mousePosition.x);
-    //         int y = Mathf.FloorToInt(mousePosition.y);
-    //
-    //         if (gridModel.GetTile(x, y) != null)
-    //         {
-    //             gridModel.SetTileColor(x, y, selectedColor);  // 모델 업데이트
-    //             gridView.UpdateTileColor(x, y, selectedColor);  // 뷰 업데이트
-    //         }
-    //     }
+    //     gridModel.Redo();
+    //     gridView.UpdateGridColors();
     // }
-
-    // Undo/Redo 버튼 처리
-    public void OnUndoButtonClicked()
-    {
-        gridModel.Undo();
-        gridView.UpdateGridColors();  // 뷰 업데이트
-    }
-
-    public void OnRedoButtonClicked()
-    {
-        gridModel.Redo();
-        gridView.UpdateGridColors();  // 뷰 업데이트
-    }
 }

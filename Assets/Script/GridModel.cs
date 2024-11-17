@@ -1,44 +1,57 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 public class GridModel
 {
-    public int width;
-    public int height;
-    private TileModel[,] tiles;
+    [SerializeField] private int _space = 1;
+    private int _width;
+    private int _height;
+    private Color _currentColor;
+    private readonly TileModel[,] _tiles;
 
-    private Stack<Action> undoStack = new Stack<Action>();
-    private Stack<Action> redoStack = new Stack<Action>();
+    private Stack<UserAction> _undoStack = new Stack<UserAction>();
+    private Stack<UserAction> _redoStack = new Stack<UserAction>();
+
+    public int Width => _width;
+    public int Height => _height;
+    public Color CurrentColor
+    {
+        get => _currentColor;
+        set => _currentColor = value;
+    }
 
     public GridModel(int width, int height)
     {
-        this.width = width;
-        this.height = height;
-        tiles = new TileModel[width, height];
+        _width = width;
+        _height = height;
+        _tiles = new TileModel[width, height];
         InitializeGrid();
     }
 
-    // 그리드 초기화
     private void InitializeGrid()
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < _width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < _height; y++)
             {
-                tiles[x, y] = new TileModel(x, y, Color.white);  // 기본 색상 흰색
+                _tiles[x, y] = new TileModel(x, y, Color.white);
             }
         }
     }
 
     public TileModel GetTile(int x, int y)
     {
-        if (x >= 0 && x < width && y >= 0 && y < height)
-            return tiles[x, y];
+        if (x >= 0 && x < _width && y >= 0 && y < _height)
+            return _tiles[x, y];
         return null;
     }
 
-    public void SetTileColor(int x, int y, Color color)
+    public void SetTileColor(int x, int y) => SetTileColor(x, y, _currentColor);
+
+    private void SetTileColor(int x, int y, Color color)
     {
+        Debug.Log($"SetTileColor({x}, {y}) called");
         var tile = GetTile(x, y);
         if (tile != null)
         {
@@ -46,29 +59,29 @@ public class GridModel
             tile.color = color;
 
             // Undo 스택에 액션 기록
-            Action action = new Action(tile, previousColor, color);
-            undoStack.Push(action);
-            redoStack.Clear();  // 새로운 액션이 발생하면 redo 스택 초기화
+            UserAction userAction = new UserAction(tile, previousColor, color);
+            _undoStack.Push(userAction);
+            _redoStack.Clear();  // 새로운 액션이 발생하면 redo 스택 초기화
         }
     }
 
     public void Undo()
     {
-        if (undoStack.Count > 0)
+        if (_undoStack.Count > 0)
         {
-            Action lastAction = undoStack.Pop();
-            lastAction.Undo();
-            redoStack.Push(lastAction);
+            UserAction lastUserAction = _undoStack.Pop();
+            lastUserAction.Undo();
+            _redoStack.Push(lastUserAction);
         }
     }
 
     public void Redo()
     {
-        if (redoStack.Count > 0)
+        if (_redoStack.Count > 0)
         {
-            Action lastAction = redoStack.Pop();
-            lastAction.Redo();
-            undoStack.Push(lastAction);
+            UserAction lastUserAction = _redoStack.Pop();
+            lastUserAction.Redo();
+            _undoStack.Push(lastUserAction);
         }
     }
 }
@@ -87,13 +100,13 @@ public class TileModel
     }
 }
 
-public class Action
+public class UserAction
 {
     private TileModel tile;
     private Color oldColor;
     private Color newColor;
 
-    public Action(TileModel tile, Color oldColor, Color newColor)
+    public UserAction(TileModel tile, Color oldColor, Color newColor)
     {
         this.tile = tile;
         this.oldColor = oldColor;
