@@ -990,6 +990,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "GridActions",
+            "id": "f99d35e4-0380-4d73-8fbf-2a7eebd8b84b",
+            "actions": [
+                {
+                    "name": "PointerMove",
+                    "type": "PassThrough",
+                    "id": "ee02f92b-f183-47f2-8565-7645e7015039",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5ef1f891-c4c5-4495-acf9-0d0d562cabbc",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

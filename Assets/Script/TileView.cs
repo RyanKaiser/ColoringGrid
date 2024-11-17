@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 
-public class TileView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class TileView : MonoBehaviour//, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler//, IDragHandler
 {
     [SerializeField] private Color _baseColor;
     [SerializeField] private Color _offsetColor;
@@ -14,6 +15,9 @@ public class TileView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private int _y;
     public event Action<int, int> OnTileClicked;
 
+    // public event Action<int, int> OnCursorEntered;
+    // public event Action OnCursorExited;
+    public void Highlight(bool flag) => _highlight.SetActive(flag);
     public void Init(int x, int y, Action<int, int> onTileClicked)
     {
         _x = x;
@@ -35,20 +39,30 @@ public class TileView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         _spriteRenderer.color = _baseColor;
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        _highlight.SetActive(true);
-    }
+    // public void OnPointerEnter(PointerEventData eventData)
+    // {
+    //     Debug.Log($"OnPointerEnter {_x}{_y}");
+    //     _highlight.SetActive(true);
+    //     // OnCursorEntered?.Invoke(_x, _y);
+    // }
+    //
+    // public void OnPointerExit(PointerEventData eventData)
+    // {
+    //     _highlight.SetActive(false);
+    //     // OnCursorExited?.Invoke();
+    // }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        _highlight.SetActive(false);
-    }
+    // public void OnPointerClick(PointerEventData eventData)
+    // {
+    //     OnTileClicked?.Invoke(_x, _y);
+    // }
 
-     public void OnPointerClick(PointerEventData eventData)
-     {
-         UpdateVisual();
-         OnTileClicked?.Invoke(_x, _y);
 
-     }
-}
+
+
+     // public void OnDrag(PointerEventData eventData)
+     //  {
+     //      OnTileClicked?.Invoke(_x, _y);
+     //
+     //  }
+ }
