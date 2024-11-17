@@ -1,10 +1,10 @@
 using UnityEngine;
 
+
 public class GridController
 {
     private GridModel _model;
     private GridView _view;
-
 
     public GridController(GridModel model, GridView view)
     {
@@ -17,15 +17,12 @@ public class GridController
             _model.CurrentColor = color;
         };
 
-        // _view.OnTileSelected += (x, y) =>
-        // {
-        //
-        //     _model.SetTileColor(x, y);
-        // };
-
         void HandleTileSelection(int x, int y)
         {
             _model.SetTileColor(x, y);
+
+            _model.CurrentColor = new Color(Random.value, Random.value, Random.value);
+            _view.UpdateTileColor(x, y, _model.CurrentColor);
         }
     }
 

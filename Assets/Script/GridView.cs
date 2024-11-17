@@ -1,18 +1,18 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GridView : MonoBehaviour
 {
     [SerializeField] private float _gridSpacing = 0.1f;
-    public GameObject tilePrefab;
-    private TileView[,] tileViews;
+    [SerializeField] private GameObject _tilePrefab;
 
+    private TileView[,] _tileViews;
     public event Action<Color> OnColorSelected;
-    public event Action<int, int> OnTileSelected;
 
     public void InitializeGrid(int width, int height, Action<int, int> onTileClickedCallback)
     {
-        tileViews = new TileView[width, height];
+        _tileViews = new TileView[width, height];
 
         for (int i = 0; i < width; i++)
         {
@@ -20,10 +20,10 @@ public class GridView : MonoBehaviour
             {
                 float x = i + _gridSpacing * i;
                 float y = j + _gridSpacing * j;
-                GameObject tileObj = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
+                GameObject tileObj = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
                 TileView tileView = tileObj.GetComponent<TileView>();
                 tileView.Init(i, j, onTileClickedCallback);
-                tileViews[i, j] = tileView;
+                _tileViews[i, j] = tileView;
             }
         }
 
@@ -35,20 +35,18 @@ public class GridView : MonoBehaviour
             Camera.main.transform.position = new Vector3(centerX, centerY, -10f);
     }
 
-    // private void HandleTileSelection(int x, int y)
-    // {
-    //     OnTileSelected?.Invoke(x, y); // 필요시 외부로 이벤트 전달
-    // }
-
     public void UpdateTileColor(int x, int y, Color color)
     {
-        if (tileViews[x, y] != null)
-            tileViews[x, y].SetColor(color);
+        if (_tileViews[x, y] != null)
+        {
+            _tileViews[x, y].SetColor(color);
+            _tileViews[x, y].UpdateVisual();
+        }
     }
 
     public void UpdateGridColors()
     {
-        foreach (var tileView in tileViews)
+        foreach (var tileView in _tileViews)
         {
             if (tileView != null)
                 tileView.UpdateVisual();
