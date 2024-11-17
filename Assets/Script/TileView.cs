@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class TileView : MonoBehaviour
+public class TileView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Color _baseColor;
     [SerializeField] private Color _offsetColor;
@@ -24,12 +25,23 @@ public class TileView : MonoBehaviour
         
     }
 
-    void OnMouseEnter()
+    // void OnMouseEnter()
+    // {
+    //     _highlight.SetActive(true);
+    // }
+    //
+    // void OnMouseExit()
+    // {
+    //     _highlight.SetActive(false);
+    // }
+
+    public void OnPointerEnter(PointerEventData eventData)
     {
+        // Debug.Log("OnPointerEnter()");
         _highlight.SetActive(true);
     }
 
-    void OnMouseExit()
+    public void OnPointerExit(PointerEventData eventData)
     {
         _highlight.SetActive(false);
     }

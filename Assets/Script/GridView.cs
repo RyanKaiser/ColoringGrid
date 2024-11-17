@@ -22,6 +22,8 @@ public class GridView : MonoBehaviour
         }
         
         UpdateGridColors();  // 초기 색상 업데이트
+        if (Camera.main != null)
+            Camera.main.transform.position = new Vector3(width / 2.0f - 0.5f, height / 2.0f - 0.5f, -10f);
     }
 
     // 타일 색상을 업데이트하는 함수
