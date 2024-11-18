@@ -4,17 +4,20 @@ using UnityEngine;
 public class GridController
 {
     private GridModel _model;
-    private GridView _view;
+    private GridView _gridView;
+    private PaletteView _paletteView;
 
-    public GridController(GridModel model, GridView view)
+    public GridController(GridModel model, GridView gridView, PaletteView paletteView)
     {
         _model = model;
-        _view = view;
+        _gridView = gridView;
+        _paletteView = paletteView;
 
-        _view.InitializeGrid(_model.Width, _model.Height, HandleTileSelection);
-        _view.OnColorSelected += color =>
+        _gridView.InitializeGrid(_model.Width, _model.Height, HandleTileSelection);
+        _paletteView.Initialize(_model.PaletteColors);
+        _paletteView.OnColorSelected += c =>
         {
-            _model.CurrentColor = color;
+            _model.CurrentColor = c;
         };
 
         void HandleTileSelection(int x, int y)
@@ -22,8 +25,8 @@ public class GridController
             Debug.Log($"HandleTileSelection: {x}, {y}  = {_model.CurrentColor}");
             _model.SetTileColor(x, y);
 
-            _model.CurrentColor = new Color(Random.value, Random.value, Random.value);
-            _view.UpdateTileColor(x, y, _model.CurrentColor);
+            // _model.CurrentColor = new Color(Random.value, Random.value, Random.value);
+            _gridView.UpdateTileColor(x, y, _model.CurrentColor);
         }
     }
 

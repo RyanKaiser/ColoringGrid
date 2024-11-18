@@ -1,10 +1,7 @@
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
-
-public class TileView : MonoBehaviour//, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler//, IDragHandler
+public class TileCell : MonoBehaviour
 {
     [SerializeField] private Color _baseColor;
     [SerializeField] private Color _offsetColor;

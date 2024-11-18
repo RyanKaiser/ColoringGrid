@@ -1,14 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.Rendering;
 
 public class GridModel
 {
-    [SerializeField] private int _space = 1;
     private int _width;
     private int _height;
     private Color _currentColor;
     private readonly TileModel[,] _tiles;
+    [SerializeField] private List<Color> _paletteColors;
 
     private Stack<UserAction> _undoStack = new Stack<UserAction>();
     private Stack<UserAction> _redoStack = new Stack<UserAction>();
@@ -21,12 +20,17 @@ public class GridModel
         set => _currentColor = value;
     }
 
-    public GridModel(int width, int height)
+    public IReadOnlyList<Color> PaletteColors => _paletteColors;
+
+    public GridModel(int width, int height, ColorSet colorSet)
     {
         _width = width;
         _height = height;
         _tiles = new TileModel[width, height];
+
         InitializeGrid();
+        InitializeColors(colorSet);
+
     }
 
     private void InitializeGrid()
@@ -38,6 +42,12 @@ public class GridModel
                 _tiles[x, y] = new TileModel(x, y, Color.white);
             }
         }
+    }
+
+    private void InitializeColors(ColorSet colorSet)
+    {
+        _paletteColors = new List<Color>();
+        _paletteColors.AddRange(colorSet.colors);
     }
 
     public TileModel GetTile(int x, int y)

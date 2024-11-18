@@ -7,18 +7,24 @@ public class GridView : MonoBehaviour
 {
     [SerializeField] private float _gridSpacing = 0.1f;
     [SerializeField] private GameObject _tilePrefab;
+    [SerializeField] private GameObject _colorPrefab;
     [SerializeField] private InputActionReference _moveActionReference;
     [SerializeField] private InputActionReference _clickActionReference;
 
-    private TileView[,] _tileViews;
+    [SerializeField] private PaletteView _paletteView;
+
+    private TileCell[,] _tileViews;
     private bool _isDragging;
 
-    private TileView _lastHoveredTile = null;
-    public event Action<Color> OnColorSelected;
+    private bool _test;
+
+
+    private TileCell _lastHoveredTile = null;
+    // public event Action<Color> OnColorSelected;
 
     public void InitializeGrid(int width, int height, Action<int, int> onTileClickedCallback)
     {
-        _tileViews = new TileView[width, height];
+        _tileViews = new TileCell[width, height];
 
         for (int i = 0; i < width; i++)
         {
@@ -26,10 +32,10 @@ public class GridView : MonoBehaviour
             {
                 float x = i + _gridSpacing * i;
                 float y = j + _gridSpacing * j;
-                GameObject tileObj = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
-                TileView tileView = tileObj.GetComponent<TileView>();
-                tileView.Init(i, j, onTileClickedCallback);
-                _tileViews[i, j] = tileView;
+                GameObject tileObj = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity, transform);
+                TileCell tileCell = tileObj.GetComponent<TileCell>();
+                tileCell.Init(i, j, onTileClickedCallback);
+                _tileViews[i, j] = tileCell;
             }
         }
 
@@ -86,7 +92,7 @@ public class GridView : MonoBehaviour
     private void OnPointerMove(InputAction.CallbackContext context)
     {
         Vector2 mousePosition = context.ReadValue<Vector2>();
-        TileView hoveredTile = GetTile(mousePosition);
+        TileCell hoveredTile = GetTile(mousePosition);
 
         if (hoveredTile != null)
         {
@@ -110,7 +116,7 @@ public class GridView : MonoBehaviour
         if (!context.performed) return;
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
-        TileView clickedTile = GetTile(mousePosition);
+        TileCell clickedTile = GetTile(mousePosition);
 
         if (clickedTile != null)
         {
@@ -133,14 +139,14 @@ public class GridView : MonoBehaviour
 
 
 
-    private TileView GetTile(Vector2 screenPosition)
+    private TileCell GetTile(Vector2 screenPosition)
     {
         Vector2 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
         RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
 
         if (hit.collider != null)
         {
-            return hit.collider.GetComponent<TileView>();
+            return hit.collider.GetComponent<TileCell>();
         }
 
         return null;
