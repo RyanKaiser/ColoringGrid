@@ -19,6 +19,7 @@ public class GridController
 
         void HandleTileSelection(int x, int y)
         {
+            Debug.Log($"HandleTileSelection: {x}, {y}  = {_model.CurrentColor}");
             _model.SetTileColor(x, y);
 
             _model.CurrentColor = new Color(Random.value, Random.value, Random.value);

@@ -2,13 +2,15 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 
 public class GridView : MonoBehaviour//, IDragHandler, IEndDragHandler
 {
     [SerializeField] private float _gridSpacing = 0.1f;
     [SerializeField] private GameObject _tilePrefab;
-    [SerializeField] private InputActionReference _inputActionReference;
+    [SerializeField] private InputActionReference _moveActionReference;
+    [SerializeField] private InputActionReference _clickActionReference;
 
     private TileView[,] _tileViews;
     private bool _isDragging;
@@ -73,14 +75,19 @@ public class GridView : MonoBehaviour//, IDragHandler, IEndDragHandler
 
     private void OnEnable()
     {
-        _inputActionReference.action.performed += OnPointerMove;
-        _inputActionReference.action.Enable();
+        _moveActionReference.action.performed += OnPointerMove;
+        _clickActionReference.action.performed += OnPointerClick;
+
+        _moveActionReference.action.Enable();
+        _clickActionReference.action.Enable();
     }
 
     private void OnDisable()
     {
-        _inputActionReference.action.performed -= OnPointerMove;
-        _inputActionReference.action.Disable();
+        _moveActionReference.action.performed -= OnPointerMove;
+        _clickActionReference.action.performed -= OnPointerClick;
+        _moveActionReference.action.Disable();
+        _clickActionReference.action.Disable();
     }
 
     private void OnPointerMove(InputAction.CallbackContext context)
@@ -99,6 +106,23 @@ public class GridView : MonoBehaviour//, IDragHandler, IEndDragHandler
             _lastHoveredTile = hoveredTile;
         }
     }
+
+    private void OnPointerClick(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        TileView clickedTile = GetTile(mousePosition);
+
+        if (clickedTile != null)
+        {
+            // clickedTile.OnTileClicked.invoke(
+            clickedTile.OnPointerClick();
+            // Debug.Log($"Clicked Tile: {clickedTile._x}, {clickedTile._y}");
+        }
+    }
+
+
 
     private TileView GetTile(Vector2 screenPosition)
     {

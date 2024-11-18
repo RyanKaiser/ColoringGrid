@@ -771,7 +771,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gridSpacing: 0.1
   _tilePrefab: {fileID: 8590494650113213736, guid: 19f4c36f159d548be8ed5454d4458c7c, type: 3}
-  _inputActionReference: {fileID: -1748912728061039462, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  _moveActionReference: {fileID: -1748912728061039462, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  _clickActionReference: {fileID: 2723514220187176790, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
 --- !u!1 &2115466990
 GameObject:
   m_ObjectHideFlags: 0

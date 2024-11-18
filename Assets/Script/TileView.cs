@@ -18,6 +18,7 @@ public class TileView : MonoBehaviour//, IPointerEnterHandler, IPointerExitHandl
     // public event Action<int, int> OnCursorEntered;
     // public event Action OnCursorExited;
     public void Highlight(bool flag) => _highlight.SetActive(flag);
+    public void OnPointerClick() => OnTileClicked?.Invoke(_x, _y);
     public void Init(int x, int y, Action<int, int> onTileClicked)
     {
         _x = x;
