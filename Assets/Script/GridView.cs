@@ -1,11 +1,9 @@
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 
-public class GridView : MonoBehaviour//, IDragHandler, IEndDragHandler
+public class GridView : MonoBehaviour
 {
     [SerializeField] private float _gridSpacing = 0.1f;
     [SerializeField] private GameObject _tilePrefab;
@@ -61,22 +59,13 @@ public class GridView : MonoBehaviour//, IDragHandler, IEndDragHandler
         }
     }
 
-    public void OnDrag(PointerEventData eventData)
-    {
-        Debug.Log("OnDrag");
-        _isDragging = true;
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        _isDragging = false;
-
-    }
-
     private void OnEnable()
     {
         _moveActionReference.action.performed += OnPointerMove;
+
+        _clickActionReference.action.started += OnPointerDragStarted;
         _clickActionReference.action.performed += OnPointerClick;
+        _clickActionReference.action.canceled += OnPointerDragCanceled;
 
         _moveActionReference.action.Enable();
         _clickActionReference.action.Enable();
@@ -85,7 +74,11 @@ public class GridView : MonoBehaviour//, IDragHandler, IEndDragHandler
     private void OnDisable()
     {
         _moveActionReference.action.performed -= OnPointerMove;
+
+        _clickActionReference.action.started -= OnPointerDragStarted;
         _clickActionReference.action.performed -= OnPointerClick;
+        _clickActionReference.action.canceled -= OnPointerDragCanceled;
+
         _moveActionReference.action.Disable();
         _clickActionReference.action.Disable();
     }
@@ -97,9 +90,14 @@ public class GridView : MonoBehaviour//, IDragHandler, IEndDragHandler
 
         if (hoveredTile != null)
         {
-            if (_lastHoveredTile != null && _lastHoveredTile != hoveredTile)
+            if (_lastHoveredTile != null )
             {
                 _lastHoveredTile.Highlight(false);
+            }
+
+            if (_isDragging && _lastHoveredTile != hoveredTile)
+            {
+                hoveredTile.OnPointerClick();
             }
 
             hoveredTile.Highlight(true);
@@ -116,11 +114,22 @@ public class GridView : MonoBehaviour//, IDragHandler, IEndDragHandler
 
         if (clickedTile != null)
         {
-            // clickedTile.OnTileClicked.invoke(
             clickedTile.OnPointerClick();
-            // Debug.Log($"Clicked Tile: {clickedTile._x}, {clickedTile._y}");
         }
     }
+
+    private void OnPointerDragCanceled(InputAction.CallbackContext context)
+    {
+        Debug.Log("ryan OnPointerDragCanceled");
+        _isDragging = false;
+    }
+
+    private void OnPointerDragStarted(InputAction.CallbackContext context)
+    {
+        Debug.Log("ryan OnPointerDragStarted");
+        _isDragging = true;
+    }
+
 
 
 

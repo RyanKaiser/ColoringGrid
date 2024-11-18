@@ -2,6 +2,54 @@
     "name": "InputSystem_Actions",
     "maps": [
         {
+            "name": "GridActions",
+            "id": "f99d35e4-0380-4d73-8fbf-2a7eebd8b84b",
+            "actions": [
+                {
+                    "name": "PointerMove",
+                    "type": "PassThrough",
+                    "id": "ee02f92b-f183-47f2-8565-7645e7015039",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PointerClick",
+                    "type": "Button",
+                    "id": "8c7baeac-7182-47d5-8018-24b9ee00294d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5ef1f891-c4c5-4495-acf9-0d0d562cabbc",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b90014e4-e18e-4b75-8bb2-614723da7a97",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "Player",
             "id": "df70fa95-8a34-4494-b137-73ab6b9c7d37",
             "actions": [
@@ -986,54 +1034,6 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "GridActions",
-            "id": "f99d35e4-0380-4d73-8fbf-2a7eebd8b84b",
-            "actions": [
-                {
-                    "name": "PointerMove",
-                    "type": "PassThrough",
-                    "id": "ee02f92b-f183-47f2-8565-7645e7015039",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "PointerClick",
-                    "type": "Button",
-                    "id": "8c7baeac-7182-47d5-8018-24b9ee00294d",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "5ef1f891-c4c5-4495-acf9-0d0d562cabbc",
-                    "path": "<Pointer>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PointerMove",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b90014e4-e18e-4b75-8bb2-614723da7a97",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PointerClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
