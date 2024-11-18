@@ -16,6 +16,7 @@ public class PaletteView : MonoBehaviour
     public event Action<Color> OnColorSelected;
 
 
+
     public void Initialize(IReadOnlyList<Color> colors)
     {
         if (_colorSet == null || _colorButtonPrefab == null || _paletteContainer == null)

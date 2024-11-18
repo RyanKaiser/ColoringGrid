@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 
@@ -11,7 +13,7 @@ public class GridView : MonoBehaviour
     [SerializeField] private InputActionReference _moveActionReference;
     [SerializeField] private InputActionReference _clickActionReference;
 
-    [SerializeField] private PaletteView _paletteView;
+    // [SerializeField] private PaletteView _paletteView;
 
     private TileCell[,] _tileViews;
     private bool _isDragging;
@@ -114,6 +116,8 @@ public class GridView : MonoBehaviour
     private void OnPointerClick(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
+        if (IsPointerOverUI()) return;
+
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         TileCell clickedTile = GetTile(mousePosition);
@@ -136,6 +140,26 @@ public class GridView : MonoBehaviour
         _isDragging = true;
     }
 
+    private bool IsPointerOverUI()
+    {
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
+        {
+            position = Mouse.current.position.ReadValue()
+        };
+
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, raycastResults);
+
+        foreach (var result in raycastResults)
+        {
+            if (result.gameObject.layer == LayerMask.NameToLayer("UI"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
 

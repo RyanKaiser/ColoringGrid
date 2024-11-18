@@ -7,7 +7,7 @@ public class GridModel
     private int _height;
     private Color _currentColor;
     private readonly TileModel[,] _tiles;
-    [SerializeField] private List<Color> _paletteColors;
+    private List<Color> _paletteColors;
 
     private Stack<UserAction> _undoStack = new Stack<UserAction>();
     private Stack<UserAction> _redoStack = new Stack<UserAction>();
@@ -48,6 +48,7 @@ public class GridModel
     {
         _paletteColors = new List<Color>();
         _paletteColors.AddRange(colorSet.colors);
+        _currentColor = _paletteColors[0];
     }
 
     public TileModel GetTile(int x, int y)
@@ -57,25 +58,25 @@ public class GridModel
         return null;
     }
 
-    public void SetTileColor(int x, int y) => SetTileColor(x, y, _currentColor);
+    public void UpdateTileColor(int x, int y) => SetTileColor(x, y, _currentColor);
 
     private void SetTileColor(int x, int y, Color color)
     {
-        Debug.Log($"SetTileColor({x}, {y}) called");
+        // Debug.Log($"SetTileColor({x}, {y}) called");
         var tile = GetTile(x, y);
         if (tile != null)
         {
             Color previousColor = tile.color;
             tile.color = color;
 
-            // Undo 스택에 액션 기록
             UserAction userAction = new UserAction(tile, previousColor, color);
             _undoStack.Push(userAction);
-            _redoStack.Clear();  // 새로운 액션이 발생하면 redo 스택 초기화
+            _redoStack.Clear();
+            Debug.Log($"Undo Stack Count: {_undoStack.Count}, Redo Stack Count: {_redoStack.Count}");
         }
     }
 
-    public void Undo()
+    public int Undo()
     {
         if (_undoStack.Count > 0)
         {
@@ -83,9 +84,10 @@ public class GridModel
             lastUserAction.Undo();
             _redoStack.Push(lastUserAction);
         }
+        return _undoStack.Count;
     }
 
-    public void Redo()
+    public int Redo()
     {
         if (_redoStack.Count > 0)
         {
@@ -93,6 +95,7 @@ public class GridModel
             lastUserAction.Redo();
             _undoStack.Push(lastUserAction);
         }
+        return _redoStack.Count;
     }
 }
 

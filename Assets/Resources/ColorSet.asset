@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d421e966786f342a6b65e301843c529a, type: 3}
   m_Name: ColorPalette
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   colors:
-  - {r: 0.93, g: 0.05, b: 0.82, a: 1}
-  - {r: 0.64, g: 0.9, b: 0.69, a: 1}
-  - {r: 0.59, g: 0.19, b: 0.0, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.59, g: 0.19, b: 0, a: 1}
   - {r: 0.73, g: 0.65, b: 0.78, a: 1}
   - {r: 0.73, g: 0.31, b: 0.45, a: 1}
   - {r: 0.87, g: 0.4, b: 0.53, a: 1}
@@ -25,7 +25,7 @@ MonoBehaviour:
   - {r: 0.45, g: 0.78, b: 0.91, a: 1}
   - {r: 0.8, g: 0.05, b: 0.42, a: 1}
   - {r: 0.63, g: 0.16, b: 0.87, a: 1}
-  - {r: 1.0, g: 0.23, b: 0.21, a: 1}
+  - {r: 1, g: 0.23, b: 0.21, a: 1}
   - {r: 0.22, g: 0.3, b: 0.37, a: 1}
   - {r: 0.28, g: 0.87, b: 0.5, a: 1}
   - {r: 0.31, g: 0.67, b: 0.89, a: 1}
