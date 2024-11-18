@@ -19,6 +19,7 @@ public class GridModel
         get => _currentColor;
         set => _currentColor = value;
     }
+    public TileModel[,] Tiles => _tiles;
 
     public IReadOnlyList<Color> PaletteColors => _paletteColors;
 
@@ -67,6 +68,8 @@ public class GridModel
         if (tile != null)
         {
             Color previousColor = tile.color;
+            if (previousColor == color) return;
+
             tile.color = color;
 
             UserAction userAction = new UserAction(tile, previousColor, color);

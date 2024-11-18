@@ -36,13 +36,13 @@ public class GridController
         void OnUndoButtonClicked()
         {
             _model.Undo();
-            _gridView.UpdateGridColors();
+            _gridView.UpdateGridColors(_model.Tiles);
         }
 
         void OnRedoButtonClicked()
         {
             _model.Redo();
-            _gridView.UpdateGridColors();
+            _gridView.UpdateGridColors(_model.Tiles);
         }
     }
 

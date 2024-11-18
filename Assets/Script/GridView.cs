@@ -15,7 +15,7 @@ public class GridView : MonoBehaviour
 
     // [SerializeField] private PaletteView _paletteView;
 
-    private TileCell[,] _tileViews;
+    private TileCell[,] _tileCells;
     private bool _isDragging;
 
     private bool _test;
@@ -26,7 +26,7 @@ public class GridView : MonoBehaviour
 
     public void InitializeGrid(int width, int height, Action<int, int> onTileClickedCallback)
     {
-        _tileViews = new TileCell[width, height];
+        _tileCells = new TileCell[width, height];
 
         for (int i = 0; i < width; i++)
         {
@@ -37,7 +37,7 @@ public class GridView : MonoBehaviour
                 GameObject tileObj = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity, transform);
                 TileCell tileCell = tileObj.GetComponent<TileCell>();
                 tileCell.Init(i, j, onTileClickedCallback);
-                _tileViews[i, j] = tileCell;
+                _tileCells[i, j] = tileCell;
             }
         }
 
@@ -51,16 +51,30 @@ public class GridView : MonoBehaviour
 
     public void UpdateTileColor(int x, int y, Color color)
     {
-        if (_tileViews[x, y] != null)
+        if (_tileCells[x, y] != null)
         {
-            _tileViews[x, y].SetColor(color);
-            _tileViews[x, y].UpdateVisual();
+            _tileCells[x, y].SetColor(color);
+            _tileCells[x, y].UpdateVisual();
+        }
+    }
+
+    public void UpdateGridColors(TileModel[,] tileModel)
+    {
+
+        for (int i = 0; i < tileModel.GetLength(0); i++)
+        {
+            for (int j = 0; j < tileModel.GetLength(1); j++)
+            {
+                _tileCells[i, j].SetColor(tileModel[i, j].color);
+                _tileCells[i, j].UpdateVisual();
+            }
+
         }
     }
 
     public void UpdateGridColors()
     {
-        foreach (var tileView in _tileViews)
+        foreach (var tileView in _tileCells)
         {
             if (tileView != null)
                 tileView.UpdateVisual();
