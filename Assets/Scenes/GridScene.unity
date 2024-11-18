@@ -2221,8 +2221,8 @@ MonoBehaviour:
   _gridView: {fileID: 2070067326}
   _paletteView: {fileID: 2115466995}
   _actionView: {fileID: 84028262}
-  _width: 12
-  _height: 9
+  _width: 120
+  _height: 90
   _colors: {fileID: 11400000, guid: 85a77f75a15004e1c86ae1ac3cf1e17c, type: 2}
 --- !u!4 &2070067325
 Transform:
@@ -2253,13 +2253,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gridSpacing: 0.1
   _tilePrefab: {fileID: 8590494650113213736, guid: 19f4c36f159d548be8ed5454d4458c7c, type: 3}
-  _colorPrefab: {fileID: 8590494650113213736, guid: c5c613524574d4a58bc01f00f1fc454f, type: 3}
   _moveActionReference: {fileID: -1748912728061039462, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   _clickActionReference: {fileID: 2723514220187176790, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   _zoomActionReference: {fileID: -3584131535825222022, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  _panActionReference: {fileID: 2879874433855298275, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   zoomSpeed: 0.05
   minZoom: 5
   maxZoom: 15
+  panSpeed: 0.5
 --- !u!1001 &2077842769
 PrefabInstance:
   m_ObjectHideFlags: 0

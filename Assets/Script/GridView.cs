@@ -9,22 +9,25 @@ public class GridView : MonoBehaviour
 {
     [SerializeField] private float _gridSpacing = 0.1f;
     [SerializeField] private GameObject _tilePrefab;
-    [SerializeField] private GameObject _colorPrefab;
     [SerializeField] private InputActionReference _moveActionReference;
     [SerializeField] private InputActionReference _clickActionReference;
     [SerializeField] private InputActionReference _zoomActionReference;
+    [SerializeField] private InputActionReference _panActionReference;
 
     [SerializeField] private float zoomSpeed = 1f;
     [SerializeField] private float minZoom = 5f;
     [SerializeField] private float maxZoom = 20f;
+    [SerializeField] private float panSpeed = 1f;
+
 
     private TileCell[,] _tileCells;
     private bool _isDragging;
+    private bool _isPanning;
+    private Vector3 _lastMousePosition;
 
-    private bool _test;
+    private int _temp;
 
-
-    private TileCell _lastHoveredTile = null;
+    private TileCell _lastHoveredTile;
     // public event Action<Color> OnColorSelected;
 
     public void InitializeGrid(int width, int height, Action<int, int> onTileClickedCallback)
@@ -94,9 +97,14 @@ public class GridView : MonoBehaviour
 
         _zoomActionReference.action.performed += OnZoom;
 
+        _panActionReference.action.started += OnPanStarted;
+        // _panActionReference.action.performed += OnPanPerformed;
+        _panActionReference.action.canceled += OnPanCanceled;
+
         _moveActionReference.action.Enable();
         _clickActionReference.action.Enable();
         _zoomActionReference.action.Enable();
+        _panActionReference.action.Enable();
     }
 
     private void OnDisable()
@@ -109,9 +117,14 @@ public class GridView : MonoBehaviour
 
         _zoomActionReference.action.performed -= OnZoom;
 
+        _panActionReference.action.started -= OnPanStarted;
+        // _panActionReference.action.performed -= OnPanPerformed;
+        _panActionReference.action.canceled -= OnPanCanceled;
+
         _moveActionReference.action.Disable();
         _clickActionReference.action.Disable();
         _zoomActionReference.action.Disable();
+        _panActionReference.action.Disable();
     }
 
     private void OnPointerMove(InputAction.CallbackContext context)
@@ -133,6 +146,20 @@ public class GridView : MonoBehaviour
 
             hoveredTile.Highlight(true);
             _lastHoveredTile = hoveredTile;
+        }
+
+        if (_isPanning)
+        {
+            Vector3 currentMousePosition = Mouse.current.position.ReadValue();
+
+            if (Camera.main != null)
+            {
+                Vector3 delta = currentMousePosition - _lastMousePosition;
+                float zoomFactor = Camera.main.orthographicSize * panSpeed * Time.deltaTime;
+                Camera.main.transform.Translate(-delta.x * zoomFactor, -delta.y * zoomFactor, 0);
+            }
+
+            _lastMousePosition = currentMousePosition;
         }
     }
 
@@ -190,6 +217,30 @@ public class GridView : MonoBehaviour
         var _camera = Camera.main;
         _camera.orthographicSize -= scrollValue.y * zoomSpeed;
         _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, minZoom, maxZoom);
+    }
+
+    private void OnPanStarted(InputAction.CallbackContext context)
+    {
+        if (context.control.path == "/Mouse/middleButton")
+        {
+            Debug.Log("pan started");
+            _isPanning = true;
+            _lastMousePosition = Mouse.current.position.ReadValue();
+        }
+    }
+
+    // private void OnPanPerformed(InputAction.CallbackContext context)
+    // {
+    //
+    // }
+
+    private void OnPanCanceled(InputAction.CallbackContext context)
+    {
+        if (context.control.path == "/Mouse/middleButton")
+        {
+            Debug.Log("pan Canceled");
+            _isPanning = false;
+        }
     }
 
 
