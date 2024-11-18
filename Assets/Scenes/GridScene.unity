@@ -2256,6 +2256,10 @@ MonoBehaviour:
   _colorPrefab: {fileID: 8590494650113213736, guid: c5c613524574d4a58bc01f00f1fc454f, type: 3}
   _moveActionReference: {fileID: -1748912728061039462, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   _clickActionReference: {fileID: 2723514220187176790, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  _zoomActionReference: {fileID: -3584131535825222022, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  zoomSpeed: 0.05
+  minZoom: 5
+  maxZoom: 15
 --- !u!1001 &2077842769
 PrefabInstance:
   m_ObjectHideFlags: 0

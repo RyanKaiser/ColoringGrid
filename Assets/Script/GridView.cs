@@ -12,8 +12,11 @@ public class GridView : MonoBehaviour
     [SerializeField] private GameObject _colorPrefab;
     [SerializeField] private InputActionReference _moveActionReference;
     [SerializeField] private InputActionReference _clickActionReference;
+    [SerializeField] private InputActionReference _zoomActionReference;
 
-    // [SerializeField] private PaletteView _paletteView;
+    [SerializeField] private float zoomSpeed = 1f;
+    [SerializeField] private float minZoom = 5f;
+    [SerializeField] private float maxZoom = 20f;
 
     private TileCell[,] _tileCells;
     private bool _isDragging;
@@ -89,8 +92,11 @@ public class GridView : MonoBehaviour
         _clickActionReference.action.performed += OnPointerClick;
         _clickActionReference.action.canceled += OnPointerDragCanceled;
 
+        _zoomActionReference.action.performed += OnZoom;
+
         _moveActionReference.action.Enable();
         _clickActionReference.action.Enable();
+        _zoomActionReference.action.Enable();
     }
 
     private void OnDisable()
@@ -101,8 +107,11 @@ public class GridView : MonoBehaviour
         _clickActionReference.action.performed -= OnPointerClick;
         _clickActionReference.action.canceled -= OnPointerDragCanceled;
 
+        _zoomActionReference.action.performed -= OnZoom;
+
         _moveActionReference.action.Disable();
         _clickActionReference.action.Disable();
+        _zoomActionReference.action.Disable();
     }
 
     private void OnPointerMove(InputAction.CallbackContext context)
@@ -175,6 +184,13 @@ public class GridView : MonoBehaviour
         return false;
     }
 
+    private void OnZoom(InputAction.CallbackContext context)
+    {
+        Vector2 scrollValue = context.ReadValue<Vector2>();
+        var _camera = Camera.main;
+        _camera.orthographicSize -= scrollValue.y * zoomSpeed;
+        _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, minZoom, maxZoom);
+    }
 
 
     private TileCell GetTile(Vector2 screenPosition)
