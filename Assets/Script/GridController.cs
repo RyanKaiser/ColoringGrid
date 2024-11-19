@@ -1,6 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-
 
 public class GridController
 {
@@ -25,6 +23,9 @@ public class GridController
 
         _actionView.OnRedo += OnRedoButtonClicked;
         _actionView.OnUndo += OnUndoButtonClicked;
+
+        _gridView.OnDragStart += () => _model.BeginAction();
+        _gridView.OnDragEnd += () => _model.EndAction();
 
         void HandleTileSelection(int x, int y)
         {

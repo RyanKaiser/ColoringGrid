@@ -1,21 +1,29 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
+[ExecuteInEditMode]
 public class PaletteView : MonoBehaviour
 {
     [SerializeField] private Image _currentColorImage;
     [SerializeField] private ColorSet _colorSet;
     [SerializeField] private GameObject _colorButtonPrefab;
     [SerializeField] private Transform _paletteContainer;
+    [SerializeField] private DynamicGridLayout _dynamicGridLayout;
 
     private Color _currentColor;
-
     public event Action<Color> OnColorSelected;
 
+    void OnRectTransformDimensionsChange()
+    {
+        _dynamicGridLayout.AdjustCellSize();
+    }
 
+    void OnValidate()
+    {
+        _dynamicGridLayout.AdjustCellSize();
+    }
 
     public void Initialize(IReadOnlyList<Color> colors)
     {
@@ -42,22 +50,6 @@ public class PaletteView : MonoBehaviour
                 _currentColorImage.color = _currentColor;
                 OnColorSelected?.Invoke(_currentColor);
             });
-
-
-            // Image buttonImage = button.GetComponent<Image>();
-            // if (buttonImage != null)
-            // {
-            //     buttonImage.color = color;
-            // }
-            //
-            // // 클릭 이벤트 추가
-            // button.onClick.AddListener(() => OnColorSelected(color));
         }
     }
-
-    // void OnColorSelected(Color selectedColor)
-    // {
-    //     Debug.Log("Selected Color: " + selectedColor);
-    //
-    // }
 }

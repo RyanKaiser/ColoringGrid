@@ -12,8 +12,6 @@ public class TileCell : MonoBehaviour
     private int _y;
     public event Action<int, int> OnTileClicked;
 
-    // public event Action<int, int> OnCursorEntered;
-    // public event Action OnCursorExited;
     public void Highlight(bool flag) => _highlight.SetActive(flag);
     public void OnPointerClick() => OnTileClicked?.Invoke(_x, _y);
     public void Init(int x, int y, Action<int, int> onTileClicked)
@@ -36,31 +34,4 @@ public class TileCell : MonoBehaviour
     {
         _spriteRenderer.color = _baseColor;
     }
-
-    // public void OnPointerEnter(PointerEventData eventData)
-    // {
-    //     Debug.Log($"OnPointerEnter {_x}{_y}");
-    //     _highlight.SetActive(true);
-    //     // OnCursorEntered?.Invoke(_x, _y);
-    // }
-    //
-    // public void OnPointerExit(PointerEventData eventData)
-    // {
-    //     _highlight.SetActive(false);
-    //     // OnCursorExited?.Invoke();
-    // }
-
-    // public void OnPointerClick(PointerEventData eventData)
-    // {
-    //     OnTileClicked?.Invoke(_x, _y);
-    // }
-
-
-
-
-     // public void OnDrag(PointerEventData eventData)
-     //  {
-     //      OnTileClicked?.Invoke(_x, _y);
-     //
-     //  }
  }

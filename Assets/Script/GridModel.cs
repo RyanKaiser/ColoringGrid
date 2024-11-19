@@ -9,8 +9,10 @@ public class GridModel
     private readonly TileModel[,] _tiles;
     private List<Color> _paletteColors;
 
-    private Stack<UserAction> _undoStack = new Stack<UserAction>();
-    private Stack<UserAction> _redoStack = new Stack<UserAction>();
+    private Stack<UserActionGroup> _undoStack = new Stack<UserActionGroup>();
+    private Stack<UserActionGroup> _redoStack = new Stack<UserActionGroup>();
+
+    private UserActionGroup _currentActionGroup;
 
     public int Width => _width;
     public int Height => _height;
@@ -31,7 +33,6 @@ public class GridModel
 
         InitializeGrid();
         InitializeColors(colorSet);
-
     }
 
     private void InitializeGrid()
@@ -59,11 +60,30 @@ public class GridModel
         return null;
     }
 
-    public void UpdateTileColor(int x, int y) => SetTileColor(x, y, _currentColor);
+    public void BeginAction()
+    {
+        _currentActionGroup = new UserActionGroup();
+    }
+
+    public void UpdateTileColor(int x, int y)
+    {
+        SetTileColor(x, y, _currentColor);
+    }
+
+    public void EndAction()
+    {
+        if (_currentActionGroup != null && !_currentActionGroup.IsEmpty())
+        {
+            _undoStack.Push(_currentActionGroup);
+            _redoStack.Clear();
+            Debug.Log($"Undo Stack Count: {_undoStack.Count}, Redo Stack Count: {_redoStack.Count}");
+        }
+
+        _currentActionGroup = null;
+    }
 
     private void SetTileColor(int x, int y, Color color)
     {
-        // Debug.Log($"SetTileColor({x}, {y}) called");
         var tile = GetTile(x, y);
         if (tile != null)
         {
@@ -72,10 +92,11 @@ public class GridModel
 
             tile.color = color;
 
-            UserAction userAction = new UserAction(tile, previousColor, color);
-            _undoStack.Push(userAction);
-            _redoStack.Clear();
-            Debug.Log($"Undo Stack Count: {_undoStack.Count}, Redo Stack Count: {_redoStack.Count}");
+            if (_currentActionGroup != null)
+            {
+                UserAction userAction = new UserAction(tile, previousColor, color);
+                _currentActionGroup.Add(userAction);
+            }
         }
     }
 
@@ -83,9 +104,9 @@ public class GridModel
     {
         if (_undoStack.Count > 0)
         {
-            UserAction lastUserAction = _undoStack.Pop();
-            lastUserAction.Undo();
-            _redoStack.Push(lastUserAction);
+            UserActionGroup lastUserActionGroup = _undoStack.Pop();
+            lastUserActionGroup.Undo();
+            _redoStack.Push(lastUserActionGroup);
         }
         return _undoStack.Count;
     }
@@ -94,9 +115,9 @@ public class GridModel
     {
         if (_redoStack.Count > 0)
         {
-            UserAction lastUserAction = _redoStack.Pop();
-            lastUserAction.Redo();
-            _undoStack.Push(lastUserAction);
+            UserActionGroup lastUserActionGroup = _redoStack.Pop();
+            lastUserActionGroup.Redo();
+            _undoStack.Push(lastUserActionGroup);
         }
         return _redoStack.Count;
     }
@@ -138,4 +159,35 @@ public class UserAction
     {
         tile.color = newColor;
     }
+}
+
+public class UserActionGroup
+{
+   private List<UserAction> actions = new List<UserAction>();
+
+   public void Add(UserAction action)
+   {
+       actions.Add(action);
+   }
+
+   public bool IsEmpty()
+   {
+       return actions.Count == 0;
+   }
+
+   public void Undo()
+   {
+       for (int i = actions.Count - 1; i >= 0; i--)
+       {
+           actions[i].Undo();
+       }
+   }
+
+   public void Redo()
+   {
+       foreach (var action in actions)
+       {
+           action.Redo();
+       }
+   }
 }

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
@@ -8,20 +7,7 @@ public class DynamicGridLayout : MonoBehaviour
     [SerializeField] private GridLayoutGroup _gridLayoutGroup;
     [SerializeField] private RectTransform _parentRectTransform;
 
-    void OnRectTransformDimensionsChange()
-    {
-        AdjustCellSize();
-    }
-
-    void OnValidate()
-    {
-        if (_gridLayoutGroup != null && _parentRectTransform != null)
-        {
-            AdjustCellSize();
-        }
-    }
-
-    void AdjustCellSize()
+    public void AdjustCellSize()
     {
         float parentWidth = _parentRectTransform.rect.width;
         float spacing = _gridLayoutGroup.spacing.x;

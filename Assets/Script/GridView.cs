@@ -19,7 +19,6 @@ public class GridView : MonoBehaviour
     [SerializeField] private float maxZoom = 20f;
     [SerializeField] private float panSpeed = 1f;
 
-
     private TileCell[,] _tileCells;
     private bool _isDragging;
     private bool _isPanning;
@@ -28,7 +27,9 @@ public class GridView : MonoBehaviour
     private int _temp;
 
     private TileCell _lastHoveredTile;
-    // public event Action<Color> OnColorSelected;
+    public event Action OnDragStart;
+    public event Action OnDragEnd;
+
 
     public void InitializeGrid(int width, int height, Action<int, int> onTileClickedCallback)
     {
@@ -98,7 +99,6 @@ public class GridView : MonoBehaviour
         _zoomActionReference.action.performed += OnZoom;
 
         _panActionReference.action.started += OnPanStarted;
-        // _panActionReference.action.performed += OnPanPerformed;
         _panActionReference.action.canceled += OnPanCanceled;
 
         _moveActionReference.action.Enable();
@@ -118,7 +118,6 @@ public class GridView : MonoBehaviour
         _zoomActionReference.action.performed -= OnZoom;
 
         _panActionReference.action.started -= OnPanStarted;
-        // _panActionReference.action.performed -= OnPanPerformed;
         _panActionReference.action.canceled -= OnPanCanceled;
 
         _moveActionReference.action.Disable();
@@ -180,14 +179,14 @@ public class GridView : MonoBehaviour
 
     private void OnPointerDragCanceled(InputAction.CallbackContext context)
     {
-        Debug.Log("ryan OnPointerDragCanceled");
         _isDragging = false;
+        OnDragEnd?.Invoke();
     }
 
     private void OnPointerDragStarted(InputAction.CallbackContext context)
     {
-        Debug.Log("ryan OnPointerDragStarted");
         _isDragging = true;
+        OnDragStart?.Invoke();
     }
 
     private bool IsPointerOverUI()
@@ -214,25 +213,22 @@ public class GridView : MonoBehaviour
     private void OnZoom(InputAction.CallbackContext context)
     {
         Vector2 scrollValue = context.ReadValue<Vector2>();
-        var _camera = Camera.main;
-        _camera.orthographicSize -= scrollValue.y * zoomSpeed;
-        _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, minZoom, maxZoom);
+
+        if (Camera.main != null)
+        {
+            Camera.main.orthographicSize -= scrollValue.y * zoomSpeed;
+            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, minZoom, maxZoom);
+        }
     }
 
     private void OnPanStarted(InputAction.CallbackContext context)
     {
         if (context.control.path == "/Mouse/middleButton")
         {
-            Debug.Log("pan started");
             _isPanning = true;
             _lastMousePosition = Mouse.current.position.ReadValue();
         }
     }
-
-    // private void OnPanPerformed(InputAction.CallbackContext context)
-    // {
-    //
-    // }
 
     private void OnPanCanceled(InputAction.CallbackContext context)
     {
