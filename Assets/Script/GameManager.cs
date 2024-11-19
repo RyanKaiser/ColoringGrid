@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int _height = 9;
     [SerializeField] private ColorSet _colors;
 
-
     private GridController _gridController;
 
     void Start()

@@ -25,7 +25,11 @@ public class GridController
         _actionView.OnUndo += OnUndoButtonClicked;
 
         _gridView.OnDragStart += () => _model.BeginAction();
-        _gridView.OnDragEnd += () => _model.EndAction();
+        _gridView.OnDragEnd += () =>
+        {
+            _model.EndAction();
+            UpdateActionButtons();
+        };
 
         void HandleTileSelection(int x, int y)
         {
@@ -33,26 +37,26 @@ public class GridController
 
             _model.UpdateTileColor(x, y);
             _gridView.UpdateTileColor(x, y, _model.CurrentColor);
-            _actionView.UndoButton.interactable = true;
         }
 
         void OnUndoButtonClicked()
         {
-            int count = _model.Undo();
-            _actionView.UndoButton.interactable = count > 0;
+            _model.Undo();
             _gridView.UpdateGridColors(_model.Tiles);
+            UpdateActionButtons();
         }
 
         void OnRedoButtonClicked()
         {
-            int count = _model.Redo();
-            _actionView.RedoButton.interactable = count > 0;
+            model.Redo();
             _gridView.UpdateGridColors(_model.Tiles);
+            UpdateActionButtons();
+        }
+
+        void UpdateActionButtons()
+        {
+            _actionView.UndoButton.interactable = _model.CanUndo();
+            _actionView.RedoButton.interactable = _model.CanRedo();
         }
     }
-
-
-
-
-
 }

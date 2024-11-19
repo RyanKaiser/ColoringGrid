@@ -26,7 +26,6 @@ public class TileCell : MonoBehaviour
         _highlight.SetActive(false);
     }
 
-
     public void SetColor(Color color)
     {
         _baseColor = color;

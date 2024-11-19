@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class ColorCell : MonoBehaviour
 {
     [SerializeField] private Color _baseColor;

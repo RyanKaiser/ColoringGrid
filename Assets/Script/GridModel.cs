@@ -3,15 +3,14 @@ using System.Collections.Generic;
 
 public class GridModel
 {
-    private int _width;
-    private int _height;
+    private readonly int _width;
+    private readonly int _height;
     private Color _currentColor;
     private readonly TileModel[,] _tiles;
     private List<Color> _paletteColors;
 
-    private Stack<UserActionGroup> _undoStack = new Stack<UserActionGroup>();
-    private Stack<UserActionGroup> _redoStack = new Stack<UserActionGroup>();
-
+    private readonly Stack<UserActionGroup> _undoStack = new Stack<UserActionGroup>();
+    private readonly Stack<UserActionGroup> _redoStack = new Stack<UserActionGroup>();
     private UserActionGroup _currentActionGroup;
 
     public int Width => _width;
@@ -53,7 +52,7 @@ public class GridModel
         _currentColor = _paletteColors[0];
     }
 
-    public TileModel GetTile(int x, int y)
+    private TileModel GetTile(int x, int y)
     {
         if (x >= 0 && x < _width && y >= 0 && y < _height)
             return _tiles[x, y];
@@ -85,41 +84,38 @@ public class GridModel
     private void SetTileColor(int x, int y, Color color)
     {
         var tile = GetTile(x, y);
-        if (tile != null)
-        {
-            Color previousColor = tile.color;
-            if (previousColor == color) return;
+        if (tile == null) return;
 
-            tile.color = color;
+        var previousColor = tile.color;
+        if (previousColor == color) return;
 
-            if (_currentActionGroup != null)
-            {
-                UserAction userAction = new UserAction(tile, previousColor, color);
-                _currentActionGroup.Add(userAction);
-            }
-        }
+        tile.color = color;
+
+        if (_currentActionGroup == null) return;
+
+        UserAction userAction = new UserAction(tile, previousColor, color);
+        _currentActionGroup.Add(userAction);
     }
 
-    public int Undo()
+    public bool CanUndo() => _undoStack.Count > 0;
+    public bool CanRedo() => _redoStack.Count > 0;
+
+    public void Undo()
     {
-        if (_undoStack.Count > 0)
-        {
-            UserActionGroup lastUserActionGroup = _undoStack.Pop();
-            lastUserActionGroup.Undo();
-            _redoStack.Push(lastUserActionGroup);
-        }
-        return _undoStack.Count;
+        if (_undoStack.Count <= 0) return;
+
+        UserActionGroup lastUserActionGroup = _undoStack.Pop();
+        lastUserActionGroup.Undo();
+        _redoStack.Push(lastUserActionGroup);
     }
 
-    public int Redo()
+    public void Redo()
     {
-        if (_redoStack.Count > 0)
-        {
-            UserActionGroup lastUserActionGroup = _redoStack.Pop();
-            lastUserActionGroup.Redo();
-            _undoStack.Push(lastUserActionGroup);
-        }
-        return _redoStack.Count;
+        if (_redoStack.Count <= 0) return;
+
+        UserActionGroup lastUserActionGroup = _redoStack.Pop();
+        lastUserActionGroup.Redo();
+        _undoStack.Push(lastUserActionGroup);
     }
 }
 

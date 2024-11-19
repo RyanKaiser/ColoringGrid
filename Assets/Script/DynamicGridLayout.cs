@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteInEditMode]
 public class DynamicGridLayout : MonoBehaviour
 {
     [SerializeField] private GridLayoutGroup _gridLayoutGroup;

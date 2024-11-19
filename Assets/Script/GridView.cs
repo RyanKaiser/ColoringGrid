@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
-
 
 public class GridView : MonoBehaviour
 {
-    [SerializeField] private float _gridSpacing = 0.1f;
     [SerializeField] private GameObject _tilePrefab;
+    [SerializeField] private float _gridSpacing = 0.1f;
+    [SerializeField] private float _zoomSpeed = 1f;
+    [SerializeField] private float _panSpeed = 1f;
+
+    [Header("Input Actions")]
     [SerializeField] private InputActionReference _moveActionReference;
     [SerializeField] private InputActionReference _clickActionReference;
     [SerializeField] private InputActionReference _zoomActionReference;
     [SerializeField] private InputActionReference _panActionReference;
-
-    [SerializeField] private float _zoomSpeed = 1f;
-    [SerializeField] private float _panSpeed = 1f;
 
     private TileCell[,] _tileCells;
     private bool _isDragging;
@@ -24,11 +23,10 @@ public class GridView : MonoBehaviour
     private Vector3 _lastMousePosition;
     private float _minZoom = 5f;
     private float _maxZoom = 20f;
-
     private TileCell _lastHoveredTile;
+
     public event Action OnDragStart;
     public event Action OnDragEnd;
-
 
     public void InitializeGrid(int width, int height, Action<int, int> onTileClickedCallback)
     {
@@ -39,8 +37,8 @@ public class GridView : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                float x = i;// + _gridSpacing * i;
-                float y = j;// + _gridSpacing * j;
+                float x = i;
+                float y = j;
                 GameObject tileObj = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity, transform);
                 TileCell tileCell = tileObj.GetComponent<TileCell>();
                 tileCell.Init(i, j, _gridSpacing, onTileClickedCallback);
@@ -50,8 +48,6 @@ public class GridView : MonoBehaviour
 
         UpdateGridColors();
 
-        // float centerX = (width + (width - 1) * _gridSpacing) / 2f - 0.5f;
-        // float centerY = (height + (height - 1) * _gridSpacing) / 2f - 0.5f;
         float centerX = width / 2f - 0.5f;
         float centerY = height / 2f - 0.5f;
         if (Camera.main != null)
@@ -69,7 +65,6 @@ public class GridView : MonoBehaviour
 
     public void UpdateGridColors(TileModel[,] tileModel)
     {
-
         for (int i = 0; i < tileModel.GetLength(0); i++)
         {
             for (int j = 0; j < tileModel.GetLength(1); j++)
@@ -240,7 +235,6 @@ public class GridView : MonoBehaviour
             _isPanning = false;
         }
     }
-
 
     private TileCell GetTile(Vector2 screenPosition)
     {
