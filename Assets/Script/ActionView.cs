@@ -10,9 +10,23 @@ public class ActionView : MonoBehaviour
     public event Action OnUndo;
     public event Action OnRedo;
 
+    public Button UndoButton => _undoButton;
+    public Button RedoButton => _redoButton;
+
+
     void Start()
     {
-        _undoButton.onClick.AddListener(() => OnUndo?.Invoke());
-        _redoButton.onClick.AddListener(() => OnRedo?.Invoke());
+        _undoButton.interactable = false;
+        _redoButton.interactable = false;
+        _undoButton.onClick.AddListener(() =>
+        {
+            _redoButton.interactable = true;
+            OnUndo?.Invoke();
+        });
+        _redoButton.onClick.AddListener(() =>
+        {
+            _undoButton.interactable = true;
+            OnRedo?.Invoke();
+        });
     }
 }

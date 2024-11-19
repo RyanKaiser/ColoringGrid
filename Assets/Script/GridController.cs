@@ -30,19 +30,23 @@ public class GridController
         void HandleTileSelection(int x, int y)
         {
             Debug.Log($"HandleTileSelection: {x}, {y}  = {_model.CurrentColor}");
+
             _model.UpdateTileColor(x, y);
             _gridView.UpdateTileColor(x, y, _model.CurrentColor);
+            _actionView.UndoButton.interactable = true;
         }
 
         void OnUndoButtonClicked()
         {
-            _model.Undo();
+            int count = _model.Undo();
+            _actionView.UndoButton.interactable = count > 0;
             _gridView.UpdateGridColors(_model.Tiles);
         }
 
         void OnRedoButtonClicked()
         {
-            _model.Redo();
+            int count = _model.Redo();
+            _actionView.RedoButton.interactable = count > 0;
             _gridView.UpdateGridColors(_model.Tiles);
         }
     }

@@ -16,14 +16,14 @@ public class GridView : MonoBehaviour
     [SerializeField] private InputActionReference _panActionReference;
 
     [SerializeField] private float _zoomSpeed = 1f;
-    [SerializeField] private float _minZoom = 5f;
-    [SerializeField] private float _maxZoom = 20f;
     [SerializeField] private float _panSpeed = 1f;
 
     private TileCell[,] _tileCells;
     private bool _isDragging;
     private bool _isPanning;
     private Vector3 _lastMousePosition;
+    private float _minZoom = 5f;
+    private float _maxZoom = 20f;
 
     private TileCell _lastHoveredTile;
     public event Action OnDragStart;
@@ -33,24 +33,27 @@ public class GridView : MonoBehaviour
     public void InitializeGrid(int width, int height, Action<int, int> onTileClickedCallback)
     {
         _tileCells = new TileCell[width, height];
+        _maxZoom = Math.Min(width, height) / 2f + 5;
 
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                float x = i + _gridSpacing * i;
-                float y = j + _gridSpacing * j;
+                float x = i;// + _gridSpacing * i;
+                float y = j;// + _gridSpacing * j;
                 GameObject tileObj = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity, transform);
                 TileCell tileCell = tileObj.GetComponent<TileCell>();
-                tileCell.Init(i, j, onTileClickedCallback);
+                tileCell.Init(i, j, _gridSpacing, onTileClickedCallback);
                 _tileCells[i, j] = tileCell;
             }
         }
 
         UpdateGridColors();
 
-        float centerX = (width + (width - 1) * _gridSpacing) / 2f - 0.5f;
-        float centerY = (height + (height - 1) * _gridSpacing) / 2f - 0.5f;
+        // float centerX = (width + (width - 1) * _gridSpacing) / 2f - 0.5f;
+        // float centerY = (height + (height - 1) * _gridSpacing) / 2f - 0.5f;
+        float centerX = width / 2f - 0.5f;
+        float centerY = height / 2f - 0.5f;
         if (Camera.main != null)
             Camera.main.transform.position = new Vector3(centerX, centerY, -10f);
     }
