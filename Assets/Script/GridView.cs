@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 
 public class GridView : MonoBehaviour
@@ -14,17 +15,15 @@ public class GridView : MonoBehaviour
     [SerializeField] private InputActionReference _zoomActionReference;
     [SerializeField] private InputActionReference _panActionReference;
 
-    [SerializeField] private float zoomSpeed = 1f;
-    [SerializeField] private float minZoom = 5f;
-    [SerializeField] private float maxZoom = 20f;
-    [SerializeField] private float panSpeed = 1f;
+    [SerializeField] private float _zoomSpeed = 1f;
+    [SerializeField] private float _minZoom = 5f;
+    [SerializeField] private float _maxZoom = 20f;
+    [SerializeField] private float _panSpeed = 1f;
 
     private TileCell[,] _tileCells;
     private bool _isDragging;
     private bool _isPanning;
     private Vector3 _lastMousePosition;
-
-    private int _temp;
 
     private TileCell _lastHoveredTile;
     public event Action OnDragStart;
@@ -154,7 +153,7 @@ public class GridView : MonoBehaviour
             if (Camera.main != null)
             {
                 Vector3 delta = currentMousePosition - _lastMousePosition;
-                float zoomFactor = Camera.main.orthographicSize * panSpeed * Time.deltaTime;
+                float zoomFactor = Camera.main.orthographicSize * _panSpeed * Time.deltaTime;
                 Camera.main.transform.Translate(-delta.x * zoomFactor, -delta.y * zoomFactor, 0);
             }
 
@@ -216,8 +215,8 @@ public class GridView : MonoBehaviour
 
         if (Camera.main != null)
         {
-            Camera.main.orthographicSize -= scrollValue.y * zoomSpeed;
-            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, minZoom, maxZoom);
+            Camera.main.orthographicSize -= scrollValue.y * _zoomSpeed;
+            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, _minZoom, _maxZoom);
         }
     }
 
