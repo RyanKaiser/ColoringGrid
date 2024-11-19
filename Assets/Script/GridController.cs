@@ -33,8 +33,6 @@ public class GridController
 
         void HandleTileSelection(int x, int y)
         {
-            Debug.Log($"HandleTileSelection: {x}, {y}  = {_model.CurrentColor}");
-
             _model.UpdateTileColor(x, y);
             _gridView.UpdateTileColor(x, y, _model.CurrentColor);
         }

@@ -75,7 +75,6 @@ public class GridModel
         {
             _undoStack.Push(_currentActionGroup);
             _redoStack.Clear();
-            Debug.Log($"Undo Stack Count: {_undoStack.Count}, Redo Stack Count: {_redoStack.Count}");
         }
 
         _currentActionGroup = null;

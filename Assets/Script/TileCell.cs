@@ -14,11 +14,9 @@ public class TileCell : MonoBehaviour
 
     public void Highlight(bool flag) => _highlight.SetActive(flag);
     public void OnPointerClick() => OnTileClicked?.Invoke(_x, _y);
-    public void Init(int x, int y, float gridRatio, Action<int, int> onTileClicked)
+    public void Init(int x, int y, float gridRatio)
     {
-        _x = x;
-        _y = y;
-        OnTileClicked = onTileClicked;
+        _x = x; _y = y;
         float gridSpacing = 1f - gridRatio;
 
         _spriteRenderer.color = (x + y) % 2 == 0 ? _offsetColor : _baseColor;

@@ -41,7 +41,9 @@ public class GridView : MonoBehaviour
                 float y = j;
                 GameObject tileObj = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity, transform);
                 TileCell tileCell = tileObj.GetComponent<TileCell>();
-                tileCell.Init(i, j, _gridSpacing, onTileClickedCallback);
+                tileCell.Init(i, j, _gridSpacing);
+                tileCell.OnTileClicked += onTileClickedCallback;
+
                 _tileCells[i, j] = tileCell;
             }
         }
@@ -231,7 +233,6 @@ public class GridView : MonoBehaviour
     {
         if (context.control.path == "/Mouse/middleButton")
         {
-            Debug.Log("pan Canceled");
             _isPanning = false;
         }
     }
